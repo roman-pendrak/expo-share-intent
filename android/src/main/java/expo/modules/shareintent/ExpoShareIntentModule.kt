@@ -140,9 +140,14 @@ class ExpoShareIntentModule : Module() {
             } else {
                 // files / medias
                 if (intent.action == Intent.ACTION_SEND) {
-                    val uri = intent.parcelable<Uri>(Intent.EXTRA_STREAM);
+                    val uri = intent.parcelable<Uri>(Intent.EXTRA_STREAM)
+                    val extraText = intent.getStringExtra(Intent.EXTRA_TEXT)
                     if (uri != null) {
-                        notifyShareIntent(mapOf( "files" to arrayOf(getFileInfo(uri), "type" to "file")))
+                        notifyShareIntent(mapOf(
+                            "files" to arrayOf(getFileInfo(uri)),
+                            "type" to "media",
+                            "text" to extraText
+                        ))
                     } else {
                         notifyError("empty uri for file sharing: " + intent.action)
                     }
