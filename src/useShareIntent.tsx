@@ -1,6 +1,7 @@
-import { useLinkingURL } from "expo-linking";
 import { useEffect, useRef, useState } from "react";
 import { AppState, Platform } from "react-native";
+
+import { useLinkingUrl } from "./useLinkingUrl";
 
 import ExpoShareIntentModule from "./ExpoShareIntentModule";
 import { ShareIntent, ShareIntentOptions } from "./ExpoShareIntentModule.types";
@@ -25,7 +26,11 @@ const isValueAvailable = (shareIntent: ShareIntent) =>
 export default function useShareIntent(
   options: ShareIntentOptions = SHAREINTENT_OPTIONS_DEFAULT,
 ) {
-  const url = useLinkingURL();
+  // Platform-specific linking URL hook:
+  // - iOS: Uses expo-linking's useLinkingURL() for share extension deep links
+  // - Android: Returns null (share intents handled via native module events)
+  // This avoids conflicts with expo-router's linking configuration on Android.
+  const url = useLinkingUrl();
 
   const appState = useRef(AppState.currentState);
   const [shareIntent, setSharedIntent] = useState<ShareIntent>(
